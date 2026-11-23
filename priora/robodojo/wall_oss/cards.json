@@ -1,0 +1,170 @@
+{
+  "align_blocks": {
+    "sha256": "19a4c10cbe8c55a88057e8f3a7775873aa8a7869a90f17d31fbf49ef7ded1efd",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/align-blocks/"
+  },
+  "arrange_largest_number": {
+    "sha256": "baba277f41c32bc9cf908dfe7ca5cfe757894ae0697d9b004b70c239bd0850eb",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/arrange-largest-number/"
+  },
+  "build_tower": {
+    "sha256": "a5a15bf0c4bdd2d4e4fdde52756b2af8828cc6ca3a89c0eb430f522bc44fc08b",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/build-tower/"
+  },
+  "classify_objects": {
+    "sha256": "c05eb64372969bd8c94e2cbdabfe8d280c57c079c382ad0a17f80dcd53766123",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/classify-objects/"
+  },
+  "classify_objects_by_language": {
+    "sha256": "575d2a32248d58c4f7e165e570d98a4aed063a06ab685906343abf2fd939ae8d",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/classify-objects-by-language/"
+  },
+  "cover_blocks": {
+    "sha256": "a0ea0c44977b5c3585214e86d95f8925639e0852ff74cce645792f58fa640999",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/cover-blocks/"
+  },
+  "deposit_coin": {
+    "sha256": "d21b09c19bc1d756507de3843a70f4c091f883fea26bd72046eb2ce053762efb",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/deposit-coin/"
+  },
+  "fasten_screws": {
+    "sha256": "486867e3112cc84324a14a4f872d15aad9fc59cd177323f41c2bb59d068696b5",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/fasten-screws/"
+  },
+  "fill_egg_holder": {
+    "sha256": "3594a00b248f9624c774c3f70aaa96098d8b8048dcda306032f03557a42b7ea4",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/fill-egg-holder/"
+  },
+  "fill_pen_holder": {
+    "sha256": "bb0b4bda48b996c33146137c207da8150129a2b31249f49aaa625be68f811f10",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/fill-pen-holder/"
+  },
+  "fold_clothes": {
+    "sha256": "66eff1bedb09b997fb7a1587cba7c29345c267d234e50c4fdda34622a77dfda0",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/fold-clothes/"
+  },
+  "general_pickup": {
+    "sha256": "6c6eae1dbb78858b3e594be86eee4370076dc5df4ce7602bc7d370353d3ccba4",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/general-pickup/"
+  },
+  "hang_mugs": {
+    "sha256": "20b7c2bcd6cb371736c4de8e914610885ca80c71c4d71c17feee419a7f528d53",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/hang-mugs/"
+  },
+  "imitate_sorting_sequence": {
+    "sha256": "7b3c4006e2824504770d901800ba0fcab155058161856d5de93e8c7b98082333",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/imitate-sorting-sequence/"
+  },
+  "insert_key": {
+    "sha256": "b67cf497b1b5e9f855368ad2f07be79bf43f07efd4aadc8ff8aa305a998fb211",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/insert-key/"
+  },
+  "insert_tubes": {
+    "sha256": "173d8f5616b7ae4ae5aab10d7406fdf2ca620a0025881194b8aca5f4e780870c",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/insert-tubes/"
+  },
+  "make_kong": {
+    "sha256": "e790d4051893269f98dc208a7cdc339e0c8ac65f10aee946e00bc60b21076f5a",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/make-kong/"
+  },
+  "make_toast": {
+    "sha256": "eaf24e669ab82a687dc27be4140a686fa55affbc95749d95342870e69c1f5a40",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/make-toast/"
+  },
+  "match_and_pick_from_conveyor": {
+    "sha256": "1945a79b82dade7973db7de60395412478241942d406f016f74245e3880f81c8",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/match-and-pick-from-conveyor/"
+  },
+  "organize_table": {
+    "sha256": "90a23dc1b8be9b24eaedb331aae40c7a0da64ca1bbec05e2e52b9c6c18025917",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/organize-table/"
+  },
+  "pack_objects_into_box": {
+    "sha256": "51e004465b1e282e2068473d4a5099f740e48e03cd6e518b7603eba9bc3bc1b7",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/pack-objects-into-box/"
+  },
+  "pick_from_conveyor_by_image": {
+    "sha256": "cdf1fe88d7e4fd4bb69a029c43ece0b70c4a814684429e846ba0cce10f32b9f1",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/pick-from-conveyor-by-image/"
+  },
+  "play_Xylophone": {
+    "sha256": "2e3633b20e5b80b6f69ba9f6375737b7604559999630fb1b05ab268b528ed26a",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/play-xylophone/"
+  },
+  "play_stacking_toy": {
+    "sha256": "96c503dff6dc33edb00757637e26a7e7c087a28c1c54ee89bea687ec542aead6",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/play-stacking-toy/"
+  },
+  "play_tic_tac_toe": {
+    "sha256": "e147ba1091c8a9d8ad6d031b590ee6da1a39b6a9e9de607b683c0586255e7db8",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/play-tic-tac-toe/"
+  },
+  "plug_in_charger": {
+    "sha256": "31d2e180695e9c271fc52cba0149ac15cf1b2f49565aa0ee70a0c8e6c5a3fa96",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/plug-in-charger/"
+  },
+  "pour_balls_into_vase": {
+    "sha256": "edf872866ce0e662f1e2e0a21fa6ea98f11658f67ca1c3565414534e678e3a32",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/pour-balls-into-vase/"
+  },
+  "pour_by_language": {
+    "sha256": "fe84b76a08cbff6f726a8950ef79a082320571c7f70419b490a525489a524e79",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/pour-by-language/"
+  },
+  "pour_liquid_into_cup": {
+    "sha256": "69f15bd1bcda3fb0dcd05f4e8e9782c3d9e242646edb13f6d3fd38e9401d828d",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/pour-liquid-into-cup/"
+  },
+  "press_by_number": {
+    "sha256": "1e230aae8daee38fca6bd8a24d1a4fc7ed5a301529e0b8b79ea30c71de4b8495",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/press-by-number/"
+  },
+  "push_T": {
+    "sha256": "d1e6c7fe83f58ed8546aa18c9f5781b61d953d9ed3a6b4be9dce51a9487288f3",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/push-t/"
+  },
+  "put_bottles_into_dustbin": {
+    "sha256": "7ac4edb920a2cccdcf8f4c6e4de5cf2491b504527417f473852d2f3f9e769782",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/put-bottles-into-dustbin/"
+  },
+  "solve_equation": {
+    "sha256": "609284499b8de27c0b20535de4be3b6e00a02b89596a90de49de33fdf54be4b1",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/solve-equation/"
+  },
+  "sort_nesting_dolls_by_size": {
+    "sha256": "6bf0b18ddd0f5598dc5c0a2f11a9116c054cfa21defc5b0a60c6206d371fcbf5",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/sort-nesting-dolls-by-size/"
+  },
+  "stack_blocks": {
+    "sha256": "88f45b41e4e3d11e635f1830378666e50dcdc24f74869ce42ef5e3a4eea1e7ac",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/stack-blocks/"
+  },
+  "stack_blocks_by_language": {
+    "sha256": "a92cd70b580cbc80e74891088648a8255339239db179c19703feafa7e54fbfb6",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/stack-blocks-by-language/"
+  },
+  "stack_bowls": {
+    "sha256": "d34ad000d451602df217009729e645cee7f6dc7a75dbd949b85f463f2dc7db19",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/stack-bowls/"
+  },
+  "store_laptop_and_headphones": {
+    "sha256": "21d156597a4068c90e6785b5f73cbd23005dd3c986732b337ad8c3d0d5ffbdd4",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/store-laptop-and-headphones/"
+  },
+  "store_tools_in_toolbox": {
+    "sha256": "61291257941c20b241b0698eaadc9cd849a6942afc34921a5fcdd3704873698d",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/store-tools-in-toolbox/"
+  },
+  "swap_T": {
+    "sha256": "91066e6b308ad2d006d2b24ad057db6b8cbb7f20dc081fac8fb436259dc389f1",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/swap-t/"
+  },
+  "swap_blocks": {
+    "sha256": "d5382db44c1648ab79b2cd47b1e05322e0bf149f3c60ab0bc3c9b565242ff07d",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/swap-blocks/"
+  },
+  "sweep_blocks": {
+    "sha256": "cccc0dd0be4bf3015102acdd6b0b8af70d78ca4b313a9c883adf2f589f5ab242",
+    "url": "https://robodojo-benchmark.com/doc/sim-tasks/sweep-blocks/"
+  }
+}

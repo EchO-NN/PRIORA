@@ -1,0 +1,25 @@
+{
+  "schema": "x5_elbow_mesh_profile_v1",
+  "joint": "joint3",
+  "links": [
+    "link2",
+    "link3"
+  ],
+  "forbidden_intervals_rad": [
+    [
+      4.793631712385142,
+      6.2731853071795864
+    ]
+  ],
+  "scan_stride_rad": 0.0015339807878856412,
+  "angular_padding_rad": 0.02,
+  "elbow_joint_exclusion_m": 0.06,
+  "home_contact_tolerance_rad": 0.01,
+  "method": "FCL triangle surface intersections of original URDF meshes outside elbow attachment",
+  "limitation": "Surface mesh profile for one adjacent link pair, not a complete collision planner.",
+  "asset_sha256": {
+    "X5A.urdf": "7aaa308a1a5b6a213d914db86ba09ddd6252f25cb498ac9a148bfa6c7166a423",
+    "meshes/link2.STL": "2865da6a962c814abaf9251497bcf5f5e3b67610e3b657ddcaa9de8b3d45e83e",
+    "meshes/link3.STL": "3ac2411b0cbffcf4808cae4c215cfeab607f240cd124eeba209ac7986ac047c0"
+  }
+}

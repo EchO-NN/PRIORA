@@ -1,0 +1,11 @@
+--- a/task/RoboDojo/tasks/imitate_sorting_sequence.py
++++ b/task/RoboDojo/tasks/imitate_sorting_sequence.py
+@@ -213,7 +213,7 @@
+ 
+     def gen_instruction(self, env_idx):
+         templates = [
+-            "Observe the object placement order, remember it, then place the corresponding objects into the basket in the same order."
++            "Observe the object placement order and remember it. Keep both of your arms at their starting poses until the demonstrating arm has fully returned to its starting pose; placing the last object does not mean the demonstration is finished. Only then place the corresponding objects into the basket in the same order. Finally, return both of your arms to their starting poses."
+         ]
+         return templates
+ 

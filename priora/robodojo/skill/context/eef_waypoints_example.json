@@ -1,0 +1,218 @@
+{
+  "request_id": "EXAMPLE_ONLY_REPLACE_WITH_CURRENT_REQUEST_ID",
+  "mode": "eef",
+  "steps": 24,
+  "reason": "Illustrative schedule after an observed missed grasp: approach open, hold, close in place and make a small lift. Replace these coordinates and evidence with the current observation; this schedule does not verify contact or grasp stability.",
+  "edit": {
+    "left": {
+      "delta_position": [
+        0,
+        0,
+        0
+      ],
+      "delta_rotation_vector": [
+        0,
+        0,
+        0
+      ],
+      "gripper": "keep"
+    },
+    "right": {
+      "delta_position": [
+        0,
+        0,
+        0
+      ],
+      "delta_rotation_vector": [
+        0,
+        0,
+        0
+      ],
+      "gripper": "keep"
+    }
+  },
+  "target": {
+    "left": {
+      "position": [
+        0.2,
+        0.1,
+        0.89
+      ],
+      "quaternion_wxyz": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "gripper_closed": true
+    },
+    "right": {
+      "position": [
+        0.2,
+        -0.1,
+        0.9
+      ],
+      "quaternion_wxyz": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "gripper_closed": false
+    }
+  },
+  "waypoints": [
+    {
+      "label": "approach",
+      "steps": 8,
+      "target": {
+        "left": {
+          "position": [
+            0.2,
+            0.1,
+            0.87
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "gripper_closed": false
+        },
+        "right": {
+          "position": [
+            0.2,
+            -0.1,
+            0.9
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "gripper_closed": false
+        }
+      }
+    },
+    {
+      "label": "wait",
+      "steps": 3,
+      "target": {
+        "left": {
+          "position": [
+            0.2,
+            0.1,
+            0.87
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "gripper_closed": false
+        },
+        "right": {
+          "position": [
+            0.2,
+            -0.1,
+            0.9
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "gripper_closed": false
+        }
+      }
+    },
+    {
+      "label": "grasp",
+      "steps": 5,
+      "target": {
+        "left": {
+          "position": [
+            0.2,
+            0.1,
+            0.87
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "gripper_closed": true
+        },
+        "right": {
+          "position": [
+            0.2,
+            -0.1,
+            0.9
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "gripper_closed": false
+        }
+      }
+    },
+    {
+      "label": "lift",
+      "steps": 8,
+      "target": {
+        "left": {
+          "position": [
+            0.2,
+            0.1,
+            0.89
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "gripper_closed": true
+        },
+        "right": {
+          "position": [
+            0.2,
+            -0.1,
+            0.9
+          ],
+          "quaternion_wxyz": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "gripper_closed": false
+        }
+      }
+    }
+  ],
+  "assessment": {
+    "task_progress": {
+      "verified_completed": [],
+      "currently_attempting": "Illustrative regrasp only",
+      "remaining": [
+        "Verify the grasp from the next observation before proceeding"
+      ]
+    },
+    "current_subgoal": "Illustrative regrasp",
+    "execution_status": "failed",
+    "execution_evidence": "Example only: a missed grasp was observed. Replace with actual visible evidence from this episode.",
+    "expected_next_intent": "Reposition and grasp before continuing the fold",
+    "predicted_next_intent": "Example only: fresh proposal intent must be assessed from its current trajectory",
+    "intent_status": "uncertain",
+    "intent_evidence": "Example only; no current pi05 proposal is attached to this documentation."
+  }
+}
