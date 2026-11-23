@@ -10,9 +10,9 @@
     />
     <link rel="icon" href="data:," />
     <title>PRIORA · RoboDojo experiments</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=examples-2" />
     <link rel="preload" href="assets/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <script defer src="app.js"></script>
+    <script defer src="app.js?v=examples-2"></script>
   </head>
   <body>
     <a class="skip" href="#gallery">Skip to task library</a>
@@ -193,6 +193,16 @@
               preload="metadata"
               aria-label="Recorded robot simulation, main camera"
             ></video>
+            <div id="wrist-pair" hidden>
+              <figure>
+                <canvas width="640" height="360" aria-label="Left wrist view"></canvas>
+                <figcaption>Left wrist</figcaption>
+              </figure>
+              <figure>
+                <canvas width="640" height="360" aria-label="Right wrist view"></canvas>
+                <figcaption>Right wrist</figcaption>
+              </figure>
+            </div>
             <div id="unavailable" hidden></div>
           </div>
           <div class="episode-meta" id="episode-meta"></div>

@@ -293,9 +293,43 @@ function renderEpisodeList() {
   }
 }
 const cameraNames = { main: 'Main', left: 'Left wrist', right: 'Right wrist', all: 'Three views' };
+let stopWristRefresh;
+function refreshWristViews() {
+  stopWristRefresh?.();
+  stopWristRefresh = undefined;
+  const p = $('player');
+  if ($('wrist-pair').hidden || !state.selected || p.readyState < 2) return;
+  const width = p.videoWidth / 3;
+  const canvases = $('wrist-pair').querySelectorAll('canvas');
+  canvases.forEach((canvas, index) => {
+    canvas
+      .getContext('2d')
+      .drawImage(
+        p,
+        (index + 1) * width,
+        0,
+        width,
+        p.videoHeight,
+        0,
+        0,
+        canvas.width,
+        canvas.height,
+      );
+  });
+  if (p.paused || p.ended) return;
+  if (p.requestVideoFrameCallback) {
+    const id = p.requestVideoFrameCallback(refreshWristViews);
+    stopWristRefresh = () => p.cancelVideoFrameCallback(id);
+  } else {
+    const id = requestAnimationFrame(refreshWristViews);
+    stopWristRefresh = () => cancelAnimationFrame(id);
+  }
+}
 function selectCamera(camera) {
   const stage = $('video-stage');
   stage.dataset.camera = camera;
+  $('wrist-pair').hidden = camera !== 'all';
+  refreshWristViews();
   $('player').setAttribute('aria-label', 'Recorded robot simulation, ' + cameraNames[camera]);
   for (const b of document.querySelectorAll('.camera-controls button'))
     b.setAttribute('aria-pressed', String(b.dataset.camera === camera));
@@ -412,12 +446,15 @@ function initViewer() {
   d.addEventListener('close', () => {
     ++state.request;
     state.selected = null;
+    refreshWristViews();
     p.pause();
     p.removeAttribute('src');
     p.load();
   });
   for (const name of ['timeupdate', 'loadedmetadata', 'seeking', 'seeked'])
     p.addEventListener(name, updateTrace);
+  for (const name of ['play', 'pause', 'loadeddata', 'seeked'])
+    p.addEventListener(name, refreshWristViews);
   p.addEventListener('error', () => {
     if (!state.selected?.video) return;
     $('unavailable').hidden = false;
@@ -449,7 +486,7 @@ function initViewer() {
   };
 }
 async function main() {
-  const r = await fetch('data/catalog.json');
+  const r = await fetch('data/catalog.json?v=examples-2');
   if (!r.ok) throw Error(r.status);
   data = await r.json();
   groups = data.families.flatMap((f) =>
