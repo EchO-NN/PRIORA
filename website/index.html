@@ -1,60 +1,262 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f8fc">
-  <meta name="description" content="Explore PRIORA's robot episodes, compare task success rates, and replay WALL proposals and GPT corrections on RoboDojo.">
-  <link rel="icon" href="data:,">
-  <title>PRIORA · RoboDojo experiments</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="preload" href="assets/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <script defer src="app.js"></script>
-</head>
-<body>
-<a class="skip" href="#gallery">Skip to task library</a>
-<header class="mast"><nav class="wrap nav" aria-label="Main navigation">
-  <div class="identity"><a class="sjtu-seal" href="https://www.sjtu.edu.cn/" aria-label="Shanghai Jiao Tong University" title="Shanghai Jiao Tong University"></a><a class="brand" href="#overview">PRIORA</a></div>
-  <div class="navlinks"><a href="#gallery">Episodes</a><a href="#results">Leaderboard</a><a href="#heatmap">Heatmap</a><a class="repo" href="https://github.com/EchO-NN/PRIORA">GitHub&nbsp; ↗</a></div>
-</nav></header>
-<main>
-<section class="hero" id="overview"><div class="wrap hero-grid">
-  <div class="intro"><p class="kicker">RoboDojo experiments</p><h1>PRIORA<span>.</span></h1>
-  <p class="subtitle">Integrating Learned Action Priors into Generalist Robot Agents</p>
-  <p class="lead">WALL proposes a bimanual trajectory. GPT inspects it before execution and can release the proposal, edit it, or take over with its own waypoints.</p>
-  <div class="actions"><a class="primary" href="#gallery">Explore episodes</a><a class="textlink" href="#results">Compare methods</a></div></div>
-  <figure class="hero-frame"><img src="assets/tower-main.png" width="640" height="480" alt="RoboDojo tower-building scene with two robot grippers facing a table of blocks and boards"><figcaption><span>Build tower</span><span>Main camera · RoboDojo</span></figcaption></figure>
-</div></section>
-<div class="wrap pipeline" id="pipeline"><div><p class="kicker">Method</p><h2>Agent pipeline</h2><a href="https://github.com/EchO-NN/PRIORA/blob/main/docs/architecture.md">Read the architecture</a></div>
-  <figure class="figure-slot" id="pipeline-figure"><figcaption>Pipeline figure <span>Reserved for the method overview</span></figcaption></figure></div>
-<section class="band" id="gallery"><div class="wrap section">
-  <p class="kicker">Rollouts</p><div class="section-head"><div><h2>Task library</h2><p>Choose a task to replay its layouts and inspect who controlled each action block.</p></div><span class="counter" id="gallery-count"></span></div>
-  <div class="toolbar"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tasks or layouts" aria-label="Search task names or layout IDs"></label><label>Variant <select id="variant"><option value="">All variants</option><option>standard</option><option>random</option></select></label><label>Episodes <select id="panel"><option value="all">Both panels</option><option value="252">Original 252</option><option value="210">Additional 210</option></select></label></div>
-  <div id="dimension-filters" class="filters" aria-label="Filter task dimension"></div>
-  <div id="gallery-grid" class="gallery-grid" aria-live="polite"></div><div id="gallery-pager" class="pager"></div>
-</div></section>
-<section id="results" class="wrap section"><p class="kicker">Evaluation</p><div class="section-head"><div><h2>Capability leaderboard</h2><p>Success rate (%) across five RoboDojo dimensions. Select a column heading to change the order.</p></div></div>
-  <div class="stats-bar"><label>PRIORA results <select id="stats-panel"><option value="all">Both panels</option><option value="252">Original 252</option><option value="210">Additional 210</option></select></label><span id="eval-count"></span></div>
-  <div class="table-wrap"><table id="summary"><caption class="sr-only">Five-dimension average and individual success rates</caption></table></div>
-  <p id="stats-note" class="footnote"></p>
-</section>
-<section id="heatmap" class="band"><div class="wrap section"><p class="kicker">Per-task results</p><div class="section-head"><div><h2>Success rate heatmap</h2><p>Compare the same task across methods. Select a task name to open its recordings.</p></div></div>
-  <div class="heat-tools"><div class="segmented" id="granularity" aria-label="Heatmap granularity"><button data-level="family" aria-pressed="true">Task families</button><button data-level="variant" aria-pressed="false">Separate variants</button></div><label>Dimension <select id="heat-dimension"></select></label><div class="scale"><span>0%</span><i></i><span>100%</span></div></div>
-  <div class="table-wrap heat-wrap"><table id="matrix"><caption class="sr-only">Success rate by task and method</caption></table></div>
-  <p class="footnote">A dash marks a rate unavailable at the selected granularity. Published family rates are displayed at family level.</p>
-</div></section>
-<section class="wrap section sources"><h2>Evaluation sources</h2><p>Each method uses the evaluation protocol shown below. Episode sets and model versions vary across reports.</p><div id="source-list"></div></section>
-<div class="wrap" id="load-error" role="alert" hidden></div>
-</main>
-<footer><div class="wrap"><a class="brand" href="#overview">PRIORA</a><div><a href="https://github.com/EchO-NN/PRIORA">Repository</a><a href="https://robodojo-benchmark.com/leaderboard?bench=sim">RoboDojo leaderboard</a></div></div></footer>
-<dialog id="viewer" aria-labelledby="viewer-title">
-  <div class="viewer-top"><div><p id="viewer-dim" class="kicker"></p><h2 id="viewer-title"></h2></div><button id="close-viewer" class="close" aria-label="Close episode viewer">×</button></div>
-  <div class="viewer-grid"><div class="player-section"><div class="video-stage"><video id="player" controls playsinline preload="metadata" aria-label="Recorded robot simulation"></video><div id="unavailable" hidden></div></div>
-  <div class="episode-meta" id="episode-meta"></div><div id="trace-panel"><div class="trace-title"><h3>Control timeline</h3><span id="current-step"></span></div>
-  <div id="timeline" tabindex="0" role="slider" aria-label="Seek through the control timeline" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="segments"></div><i id="cursor"></i></div>
-  <div class="legend"><span class="wall">WALL</span><span class="edit">GPT edit</span><span class="eef">GPT takeover</span><span class="unknown">Unrecorded</span></div>
-  <div class="now"><strong id="current-mode"></strong><span id="subtask"></span></div></div></div>
-  <aside class="episode-side"><div class="drawer-header"><h3>Episode selection</h3><span id="episode-total"></span></div><div id="episode-list"></div><div id="episode-pager" class="pager"></div></aside></div>
-</dialog>
-<noscript><p class="wrap">Enable JavaScript to explore the benchmark data and recorded episodes.</p></noscript>
-</body></html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f8fc" />
+    <meta
+      name="description"
+      content="Explore PRIORA's robot episodes, compare task success rates, and replay WALL proposals and GPT corrections on RoboDojo."
+    />
+    <link rel="icon" href="data:," />
+    <title>PRIORA · RoboDojo experiments</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preload" href="assets/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#gallery">Skip to task library</a>
+    <header class="mast">
+      <nav class="wrap nav" aria-label="Main navigation">
+        <div class="identity">
+          <a
+            class="sjtu-seal"
+            href="https://www.sjtu.edu.cn/"
+            aria-label="Shanghai Jiao Tong University"
+            title="Shanghai Jiao Tong University"
+          ></a
+          ><a class="brand" href="#overview">PRIORA</a>
+        </div>
+        <div class="navlinks">
+          <a href="#gallery">Episodes</a><a href="#results">Leaderboard</a
+          ><a href="#heatmap">Heatmap</a
+          ><a class="repo" href="https://github.com/EchO-NN/PRIORA">GitHub&nbsp; ↗</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="hero" id="overview">
+        <div class="wrap hero-grid">
+          <div class="intro">
+            <p class="kicker">RoboDojo experiments</p>
+            <h1>PRIORA<span>.</span></h1>
+            <p class="subtitle">Integrating Learned Action Priors into Generalist Robot Agents</p>
+            <p class="lead">
+              WALL proposes a bimanual trajectory. GPT inspects it before execution and can release
+              the proposal, edit it, or take over with its own waypoints.
+            </p>
+            <div class="actions">
+              <a class="primary" href="#gallery">Explore episodes</a
+              ><a class="textlink" href="#results">Compare methods</a>
+            </div>
+          </div>
+          <figure class="hero-frame">
+            <img
+              src="assets/tower-main.png"
+              width="640"
+              height="480"
+              alt="RoboDojo tower-building scene with two robot grippers facing a table of blocks and boards"
+            />
+            <figcaption><span>Build tower</span><span>Main camera · RoboDojo</span></figcaption>
+          </figure>
+        </div>
+      </section>
+      <div class="wrap pipeline" id="pipeline">
+        <div>
+          <p class="kicker">Method</p>
+          <h2>Agent pipeline</h2>
+          <a href="https://github.com/EchO-NN/PRIORA/blob/main/docs/architecture.md"
+            >Read the architecture</a
+          >
+        </div>
+        <figure class="figure-slot" id="pipeline-figure">
+          <figcaption>Pipeline figure <span>Reserved for the method overview</span></figcaption>
+        </figure>
+      </div>
+      <section class="band" id="gallery">
+        <div class="wrap section">
+          <p class="kicker">Rollouts</p>
+          <div class="section-head">
+            <div>
+              <h2>Task library</h2>
+              <p>
+                Choose a task to replay its layouts and inspect who controlled each action block.
+              </p>
+            </div>
+            <span class="counter" id="gallery-count"></span>
+          </div>
+          <div class="toolbar">
+            <label class="search"
+              ><span aria-hidden="true">⌕</span
+              ><input
+                id="search"
+                type="search"
+                placeholder="Search tasks or layouts"
+                aria-label="Search task names or layout IDs" /></label
+            ><label
+              >Variant
+              <select id="variant">
+                <option value="">All variants</option>
+                <option>standard</option>
+                <option>random</option>
+              </select></label
+            ><label
+              >Episodes
+              <select id="panel">
+                <option value="all">Both panels</option>
+                <option value="252">Original 252</option>
+                <option value="210">Additional 210</option>
+              </select></label
+            >
+          </div>
+          <div id="dimension-filters" class="filters" aria-label="Filter task dimension"></div>
+          <div id="gallery-grid" class="gallery-grid" aria-live="polite"></div>
+          <div id="gallery-pager" class="pager"></div>
+        </div>
+      </section>
+      <section id="results" class="wrap section">
+        <p class="kicker">Evaluation</p>
+        <div class="section-head">
+          <div>
+            <h2>Capability leaderboard</h2>
+            <p>
+              Success rate (%) across five RoboDojo dimensions. Select a column heading to change
+              the order.
+            </p>
+          </div>
+        </div>
+        <div class="stats-bar">
+          <label
+            >PRIORA results
+            <select id="stats-panel">
+              <option value="all">Both panels</option>
+              <option value="252">Original 252</option>
+              <option value="210">Additional 210</option>
+            </select></label
+          ><span id="eval-count"></span>
+        </div>
+        <div class="table-wrap">
+          <table id="summary">
+            <caption class="sr-only">
+              Five-dimension average and individual success rates
+            </caption>
+          </table>
+        </div>
+        <p id="stats-note" class="footnote"></p>
+      </section>
+      <section id="heatmap" class="band">
+        <div class="wrap section">
+          <p class="kicker">Per-task results</p>
+          <div class="section-head">
+            <div>
+              <h2>Success rate heatmap</h2>
+              <p>
+                Compare the same task across methods. Select a task name to open its recordings.
+              </p>
+            </div>
+          </div>
+          <div class="heat-tools">
+            <div class="segmented" id="granularity" aria-label="Heatmap granularity">
+              <button data-level="family" aria-pressed="true">Task families</button
+              ><button data-level="variant" aria-pressed="false">Separate variants</button>
+            </div>
+            <label
+              >Dimension
+              <select id="heat-dimension"></select
+            ></label>
+            <div class="scale"><span>0%</span><i></i><span>100%</span></div>
+          </div>
+          <div class="table-wrap heat-wrap">
+            <table id="matrix">
+              <caption class="sr-only">
+                Success rate by task and method
+              </caption>
+            </table>
+          </div>
+          <p class="footnote">
+            A dash marks a rate unavailable at the selected granularity. Published family rates are
+            displayed at family level.
+          </p>
+        </div>
+      </section>
+      <section class="wrap section sources">
+        <h2>Evaluation sources</h2>
+        <p>
+          Each method uses the evaluation protocol shown below. Episode sets and model versions vary
+          across reports.
+        </p>
+        <div id="source-list"></div>
+      </section>
+      <div class="wrap" id="load-error" role="alert" hidden></div>
+    </main>
+    <footer>
+      <div class="wrap">
+        <a class="brand" href="#overview">PRIORA</a>
+        <div>
+          <a href="https://github.com/EchO-NN/PRIORA">Repository</a
+          ><a href="https://robodojo-benchmark.com/leaderboard?bench=sim">RoboDojo leaderboard</a>
+        </div>
+      </div>
+    </footer>
+    <dialog id="viewer" aria-labelledby="viewer-title">
+      <div class="viewer-top">
+        <div>
+          <p id="viewer-dim" class="kicker"></p>
+          <h2 id="viewer-title"></h2>
+        </div>
+        <button id="close-viewer" class="close" aria-label="Close episode viewer">×</button>
+      </div>
+      <div class="viewer-grid">
+        <div class="player-section">
+          <div class="video-stage">
+            <video
+              id="player"
+              controls
+              playsinline
+              preload="metadata"
+              aria-label="Recorded robot simulation"
+            ></video>
+            <div id="unavailable" hidden></div>
+          </div>
+          <div class="episode-meta" id="episode-meta"></div>
+          <div id="trace-panel">
+            <div class="trace-title">
+              <h3>Control timeline</h3>
+              <span id="current-step"></span>
+            </div>
+            <div
+              id="timeline"
+              tabindex="0"
+              role="slider"
+              aria-label="Seek through the control timeline"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <div id="segments"></div>
+              <i id="cursor"></i>
+            </div>
+            <div class="legend">
+              <span class="wall">WALL</span><span class="edit">GPT edit</span
+              ><span class="eef">GPT takeover</span><span class="unknown">Unrecorded</span>
+            </div>
+            <div class="now"><strong id="current-mode"></strong><span id="subtask"></span></div>
+          </div>
+        </div>
+        <aside class="episode-side">
+          <div class="drawer-header">
+            <h3>Episode selection</h3>
+            <span id="episode-total"></span>
+          </div>
+          <div id="episode-list"></div>
+          <div id="episode-pager" class="pager"></div>
+        </aside>
+      </div>
+    </dialog>
+    <noscript
+      ><p class="wrap">
+        Enable JavaScript to explore the benchmark data and recorded episodes.
+      </p></noscript
+    >
+  </body>
+</html>
