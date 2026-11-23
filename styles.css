@@ -14,3 +14,5 @@ dialog{padding:0;width:min(1180px,96vw);max-height:94dvh;overflow:auto;border:1p
 .navlinks a{white-space:nowrap}
 @media(max-width:480px){.nav{gap:8px}.navlinks{gap:9px}.navlinks .repo{padding-left:6px}.nav .brand{font-size:1.1rem}.identity{gap:6px}.sjtu-seal{width:33px;height:33px}}
 @media(max-width:370px){.navlinks{gap:6px}.navlinks a{font-size:.71rem}}
+@media(max-width:480px){.navlinks .repo{display:none}}
+@media(max-width:340px){.navlinks a{font-size:.68rem}.nav .brand{font-size:1rem}}
