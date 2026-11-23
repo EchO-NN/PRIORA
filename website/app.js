@@ -35,6 +35,19 @@ function safeLink(label, url) {
   a.href = url;
   return a;
 }
+function outcomeBadge(ep) {
+  if (typeof ep.success !== 'boolean') return make('span', 'status', 'Outcome unavailable');
+  return make(
+    'span',
+    ep.success ? 'status s-ok' : 'status s-fail',
+    ep.success ? 'Success' : 'Failure',
+  );
+}
+function taskRate(group) {
+  return Number.isFinite(group.rate)
+    ? 'Success rate: ' + Number(group.rate.toFixed(2)) + '%'
+    : 'Success rate unavailable';
+}
 function order(list, key, desc, get) {
   return [...list].sort((a, b) => {
     const x = get(a, key),
@@ -93,6 +106,7 @@ function renderGallery() {
     const meta = make('span', 'task-details');
     meta.append(make('span', 'variant', g.variant), make('span', '', g.dimension));
     block.append(meta);
+    block.append(make('span', 'task-rate', taskRate(g)));
     b.append(block);
     grid.append(b);
   }
@@ -276,6 +290,7 @@ function openGroup(key) {
   if (!state.viewerRows.length) return;
   $('viewer-title').textContent = g.name + ' · ' + g.variant;
   $('viewer-dim').textContent = g.dimension;
+  $('viewer-rate').textContent = taskRate(g);
   if (!$('viewer').open) $('viewer').showModal();
   chooseEpisode(state.viewerRows[0]);
 }
@@ -288,11 +303,18 @@ function renderEpisodeList() {
     img.loading = 'lazy';
     img.alt = '';
     img.src = ep.poster;
-    b.append(img, make('b', '', 'Example ' + ep.number));
+    const caption = make('span', 'example-caption');
+    caption.append(make('b', '', 'Example ' + ep.number), outcomeBadge(ep));
+    b.append(img, caption);
     list.append(b);
   }
 }
 const cameraNames = { main: 'Main', left: 'Left wrist', right: 'Right wrist', all: 'Three views' };
+function applySpeed(player) {
+  const rate = Number($('playback-speed').value);
+  player.defaultPlaybackRate = rate;
+  player.playbackRate = rate;
+}
 let stopWristRefresh;
 function refreshWristViews() {
   stopWristRefresh?.();
@@ -399,6 +421,7 @@ async function chooseEpisode(ep) {
   state.selected = ep;
   selectCamera('main');
   const u = $('unavailable');
+  $('buffering').hidden = true;
   p.pause();
   p.removeAttribute('src');
   p.removeAttribute('poster');
@@ -410,9 +433,10 @@ async function chooseEpisode(ep) {
   if (available) {
     p.src = ep.video;
     p.load();
+    applySpeed(p);
   }
   const meta = $('episode-meta');
-  meta.replaceChildren(make('b', '', 'Example ' + ep.number));
+  meta.replaceChildren(make('b', '', 'Example ' + ep.number), outcomeBadge(ep));
   renderEpisodeList();
   drawTrace(null);
   if (!ep.trace) return;
@@ -435,6 +459,19 @@ function initViewer() {
     tl = $('timeline');
   for (const b of document.querySelectorAll('.camera-controls button'))
     b.onclick = () => selectCamera(b.dataset.camera);
+  const speed = $('playback-speed');
+  speed.onchange = () => applySpeed(p);
+  p.addEventListener('ratechange', () => {
+    if (
+      state.selected &&
+      [...speed.options].some((option) => Number(option.value) === p.playbackRate)
+    )
+      speed.value = String(p.playbackRate);
+  });
+  for (const event of ['waiting', 'stalled', 'playing', 'canplay', 'pause', 'ended'])
+    p.addEventListener(event, () => {
+      $('buffering').hidden = !(state.selected && !p.paused && !p.ended && p.readyState < 3);
+    });
   $('close-viewer').onclick = () => d.close();
   d.onclick = (e) => {
     if (e.target === d) {
@@ -486,15 +523,17 @@ function initViewer() {
   };
 }
 async function main() {
-  const r = await fetch('data/catalog.json?v=examples-2');
+  const r = await fetch('data/catalog.json?v=outcomes-1');
   if (!r.ok) throw Error(r.status);
   data = await r.json();
+  const rates = data.methods.find((m) => m.id === 'priora').variant;
   groups = data.families.flatMap((f) =>
     f.variants.map((v) => ({
       id: f.id + '__' + v,
       task: f.id,
       name: f.name,
       dimension: f.dimension,
+      rate: rates[f.id + '__' + v],
       variant: v,
       rows: Array.from({ length: 6 }, (_, i) => {
         const number = i + 1,
@@ -502,9 +541,10 @@ async function main() {
         return {
           id,
           number,
-          video: 'media/examples/' + id + '.mp4',
-          poster: 'media/posters/' + id + '.jpg',
-          trace: 'data/examples/' + id + '.json',
+          success: data.exampleOutcomes[f.id + '__' + v][i],
+          video: 'media/examples/' + id + '.mp4?v=outcomes-1',
+          poster: 'media/posters/' + id + '.jpg?v=outcomes-1',
+          trace: 'data/examples/' + id + '.json?v=outcomes-1',
         };
       }),
     })),

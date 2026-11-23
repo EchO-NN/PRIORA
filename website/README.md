@@ -16,6 +16,6 @@ Replace the figure with ID `pipeline-figure` in `index.html` when the pipeline i
 
 `data/catalog.json` contains aggregate percentages and source information. PRIORA pools each evaluated layout's final outcome. The dimension rates average their task-family rates, and the overall mean weights the five dimensions equally. Video selection is independent of these calculations.
 
-Examples use public names of the form `task--variant--1`. The matching JSON trace contains the control period, subtask strings, and half-open segments `[start, end, mode, subtaskIndex]`. Some examples are non-overlapping phases of a longer rollout. Their timelines start at the first observation of the excerpt. Partial recordings end at the last archived observation.
+Examples use public names of the form `task--variant--1`. The matching JSON trace contains the control period, subtask strings, and half-open segments `[start, end, mode, subtaskIndex]`. Some examples are non-overlapping phases of a longer rollout. Their timelines start at the first observation of the excerpt. The example badges reflect the final outcome of the source rollout. Task cards and the player show the success rate over all evaluated layouts for that variant.
 
-Each video stores three synchronized views side by side at native spatial resolution, ordered main, left wrist, right wrist. The camera controls select one view or the entire strip using the same video and playback position.
+Each video stores three synchronized 640 × 360 views side by side at 25 frames per second, ordered main, left wrist, right wrist. Playback speed ranges from 0.25× to 4×. The camera controls, control timeline, and subtask display share the video clock at every speed.
