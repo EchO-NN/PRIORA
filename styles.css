@@ -669,12 +669,14 @@ body:has(dialog[open]) {
   background: #161c26;
   border-radius: 9px;
   overflow: hidden;
-  min-height: 150px;
 }
 .video-stage video {
   width: 100%;
-  max-height: 46vh;
   display: block;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  object-position: left center;
+  height: auto;
 }
 .video-stage [hidden] {
   display: none;
@@ -1021,21 +1023,6 @@ body:has(dialog[open]) {
     transition: none !important;
   }
 }
-
-.identity {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
-.sjtu-seal {
-  display: block;
-  width: 44px;
-  height: 44px;
-  background: #004098;
-  -webkit-mask: url('assets/sjtu-seal.png') center/contain no-repeat;
-  mask: url('assets/sjtu-seal.png') center/contain no-repeat;
-}
 .navlinks a {
   white-space: nowrap;
 }
@@ -1051,13 +1038,6 @@ body:has(dialog[open]) {
   }
   .nav .brand {
     font-size: 1.1rem;
-  }
-  .identity {
-    gap: 6px;
-  }
-  .sjtu-seal {
-    width: 33px;
-    height: 33px;
   }
 }
 @media (max-width: 370px) {
@@ -1080,4 +1060,41 @@ body:has(dialog[open]) {
   .nav .brand {
     font-size: 1rem;
   }
+}
+
+.camera-controls {
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.video-stage[data-camera='left'] video {
+  object-position: center;
+}
+.video-stage[data-camera='right'] video {
+  object-position: right center;
+}
+.video-stage[data-camera='all'] video {
+  aspect-ratio: 16/3;
+  object-fit: contain;
+  object-position: center;
+}
+.video-stage video:fullscreen {
+  background: #141921;
+  box-sizing: border-box;
+  padding-inline: max(0px, calc((100vw - 100vh * 16 / 9) / 2));
+  padding-block: max(0px, calc((100vh - 100vw * 9 / 16) / 2));
+}
+.video-stage[data-camera='all'] video:fullscreen {
+  padding: 0;
+  object-fit: contain;
+}
+.video-stage #unavailable {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  background: #161c26;
+}
+.video-stage #unavailable[hidden] {
+  display: none;
 }

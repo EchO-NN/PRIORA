@@ -18,17 +18,9 @@
     <a class="skip" href="#gallery">Skip to task library</a>
     <header class="mast">
       <nav class="wrap nav" aria-label="Main navigation">
-        <div class="identity">
-          <a
-            class="sjtu-seal"
-            href="https://www.sjtu.edu.cn/"
-            aria-label="Shanghai Jiao Tong University"
-            title="Shanghai Jiao Tong University"
-          ></a
-          ><a class="brand" href="#overview">PRIORA</a>
-        </div>
+        <a class="brand" href="#overview">PRIORA</a>
         <div class="navlinks">
-          <a href="#gallery">Episodes</a><a href="#results">Leaderboard</a
+          <a href="#gallery">Episodes</a><a href="#results">Comparison</a
           ><a href="#heatmap">Heatmap</a
           ><a class="repo" href="https://github.com/EchO-NN/PRIORA">GitHub&nbsp; ↗</a>
         </div>
@@ -79,9 +71,7 @@
           <div class="section-head">
             <div>
               <h2>Task library</h2>
-              <p>
-                Choose a task to replay its layouts and inspect who controlled each action block.
-              </p>
+              <p>Select a task to watch examples and inspect who controlled each action block.</p>
             </div>
             <span class="counter" id="gallery-count"></span>
           </div>
@@ -91,21 +81,14 @@
               ><input
                 id="search"
                 type="search"
-                placeholder="Search tasks or layouts"
-                aria-label="Search task names or layout IDs" /></label
+                placeholder="Search tasks"
+                aria-label="Search task names" /></label
             ><label
               >Variant
               <select id="variant">
                 <option value="">All variants</option>
                 <option>standard</option>
                 <option>random</option>
-              </select></label
-            ><label
-              >Episodes
-              <select id="panel">
-                <option value="all">Both panels</option>
-                <option value="252">Original 252</option>
-                <option value="210">Additional 210</option>
               </select></label
             >
           </div>
@@ -118,23 +101,14 @@
         <p class="kicker">Evaluation</p>
         <div class="section-head">
           <div>
-            <h2>Capability leaderboard</h2>
+            <h2>Method comparison</h2>
             <p>
               Success rate (%) across five RoboDojo dimensions. Select a column heading to change
               the order.
             </p>
           </div>
         </div>
-        <div class="stats-bar">
-          <label
-            >PRIORA results
-            <select id="stats-panel">
-              <option value="all">Both panels</option>
-              <option value="252">Original 252</option>
-              <option value="210">Additional 210</option>
-            </select></label
-          ><span id="eval-count"></span>
-        </div>
+
         <div class="table-wrap">
           <table id="summary">
             <caption class="sr-only">
@@ -181,10 +155,7 @@
       </section>
       <section class="wrap section sources">
         <h2>Evaluation sources</h2>
-        <p>
-          Each method uses the evaluation protocol shown below. Episode sets and model versions vary
-          across reports.
-        </p>
+        <p>The published methods use different evaluation protocols and model versions.</p>
         <div id="source-list"></div>
       </section>
       <div class="wrap" id="load-error" role="alert" hidden></div>
@@ -208,13 +179,19 @@
       </div>
       <div class="viewer-grid">
         <div class="player-section">
-          <div class="video-stage">
+          <div class="camera-controls segmented" role="group" aria-label="Camera view">
+            <button type="button" data-camera="main" aria-pressed="true">Main</button>
+            <button type="button" data-camera="left" aria-pressed="false">Left wrist</button>
+            <button type="button" data-camera="right" aria-pressed="false">Right wrist</button>
+            <button type="button" data-camera="all" aria-pressed="false">Three views</button>
+          </div>
+          <div class="video-stage" data-camera="main" id="video-stage">
             <video
               id="player"
               controls
               playsinline
               preload="metadata"
-              aria-label="Recorded robot simulation"
+              aria-label="Recorded robot simulation, main camera"
             ></video>
             <div id="unavailable" hidden></div>
           </div>
@@ -245,11 +222,9 @@
         </div>
         <aside class="episode-side">
           <div class="drawer-header">
-            <h3>Episode selection</h3>
-            <span id="episode-total"></span>
+            <h3>Examples</h3>
           </div>
           <div id="episode-list"></div>
-          <div id="episode-pager" class="pager"></div>
         </aside>
       </div>
     </dialog>
