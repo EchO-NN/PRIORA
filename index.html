@@ -10,9 +10,9 @@
     />
     <link rel="icon" href="data:," />
     <title>PRIORA · RoboDojo experiments</title>
-    <link rel="stylesheet" href="styles.css?v=examples-2" />
+    <link rel="stylesheet" href="styles.css?v=outcomes-1" />
     <link rel="preload" href="assets/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <script defer src="app.js?v=examples-2"></script>
+    <script defer src="app.js?v=outcomes-1"></script>
   </head>
   <body>
     <a class="skip" href="#gallery">Skip to task library</a>
@@ -71,7 +71,10 @@
           <div class="section-head">
             <div>
               <h2>Task library</h2>
-              <p>Select a task to watch examples and inspect who controlled each action block.</p>
+              <p>
+                Success rates cover all evaluated layouts for each variant. Select a task to watch
+                six examples.
+              </p>
             </div>
             <span class="counter" id="gallery-count"></span>
           </div>
@@ -174,16 +177,33 @@
         <div>
           <p id="viewer-dim" class="kicker"></p>
           <h2 id="viewer-title"></h2>
+          <p id="viewer-rate" class="viewer-rate"></p>
         </div>
         <button id="close-viewer" class="close" aria-label="Close episode viewer">×</button>
       </div>
       <div class="viewer-grid">
         <div class="player-section">
-          <div class="camera-controls segmented" role="group" aria-label="Camera view">
-            <button type="button" data-camera="main" aria-pressed="true">Main</button>
-            <button type="button" data-camera="left" aria-pressed="false">Left wrist</button>
-            <button type="button" data-camera="right" aria-pressed="false">Right wrist</button>
-            <button type="button" data-camera="all" aria-pressed="false">Three views</button>
+          <div class="playback-tools">
+            <div class="camera-controls segmented" role="group" aria-label="Camera view">
+              <button type="button" data-camera="main" aria-pressed="true">Main</button>
+              <button type="button" data-camera="left" aria-pressed="false">Left wrist</button>
+              <button type="button" data-camera="right" aria-pressed="false">Right wrist</button>
+              <button type="button" data-camera="all" aria-pressed="false">Three views</button>
+            </div>
+            <label class="speed-control"
+              >Speed
+              <select id="playback-speed" aria-label="Playback speed">
+                <option value="0.25">0.25×</option>
+                <option value="0.5">0.5×</option>
+                <option value="0.75">0.75×</option>
+                <option value="1" selected>1×</option>
+                <option value="1.25">1.25×</option>
+                <option value="1.5">1.5×</option>
+                <option value="2">2×</option>
+                <option value="3">3×</option>
+                <option value="4">4×</option>
+              </select>
+            </label>
           </div>
           <div class="video-stage" data-camera="main" id="video-stage">
             <video
@@ -204,6 +224,7 @@
               </figure>
             </div>
             <div id="unavailable" hidden></div>
+            <span id="buffering" role="status" hidden>Buffering…</span>
           </div>
           <div class="episode-meta" id="episode-meta"></div>
           <div id="trace-panel">
@@ -235,6 +256,10 @@
             <h3>Examples</h3>
           </div>
           <div id="episode-list"></div>
+          <p class="outcome-note">
+            Success and failure refer to the final outcome of the recorded rollout, including when
+            the example shows an excerpt.
+          </p>
         </aside>
       </div>
     </dialog>
