@@ -486,7 +486,7 @@ function initViewer() {
   };
 }
 async function main() {
-  const r = await fetch('data/catalog.json');
+  const r = await fetch('data/catalog.json?v=examples-2');
   if (!r.ok) throw Error(r.status);
   data = await r.json();
   groups = data.families.flatMap((f) =>

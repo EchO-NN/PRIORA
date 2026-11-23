@@ -40,7 +40,7 @@ The teacher compares what the previous motion accomplished with what the next pr
 | --- | --- |
 | Install the simulator, policy and teacher | [Reproduction guide](docs/reproduction.md) |
 | Inspect a real input and executed action | [Tower example](examples/build_tower/README.md) |
-| Select a layout or interpret a run | [252-episode and 210-episode panels](docs/evaluation.md) |
+| Select a layout or interpret a run | [Evaluation manifests](docs/evaluation.md) |
 | Read what GPT actually receives | [Teacher prompt](priora/robodojo/wall_oss/teacher.md) and [tool definitions](priora/robodojo/wall_oss/client.py) |
 | Follow the code from launch to execution | [Episode launcher](priora/cli.py) and [simulator adapter](priora/robodojo/wall_oss/session.py) |
 
