@@ -1073,10 +1073,44 @@ body:has(dialog[open]) {
 .video-stage[data-camera='right'] video {
   object-position: right center;
 }
-.video-stage[data-camera='all'] video {
-  aspect-ratio: 16/3;
-  object-fit: contain;
-  object-position: center;
+#wrist-pair {
+  display: grid;
+  gap: 2px;
+  background: #161c26;
+}
+#wrist-pair[hidden] {
+  display: none;
+}
+#wrist-pair figure {
+  position: relative;
+  min-width: 0;
+}
+#wrist-pair canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+#wrist-pair figcaption {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.67rem;
+  color: white;
+  background: #141921b8;
+}
+.video-stage[data-camera='all'] {
+  grid-template-columns: 2fr 1fr;
+  gap: 2px;
+}
+@media (max-width: 680px) {
+  .video-stage[data-camera='all'] {
+    grid-template-columns: 1fr;
+  }
+  #wrist-pair {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 .video-stage video:fullscreen {
   background: #141921;
