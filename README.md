@@ -2,7 +2,7 @@
 
 When a generalist model can issue robot actions itself, what does a policy trained on demonstrations still contribute? PRIORA lets both models act in the same episode. **WALL proposes a trajectory. GPT inspects it before the robot moves**, then releases a prefix, edits it, or supplies its own waypoints. After execution, both models can use the resulting observation for the next decision.
 
-[Agent architecture](docs/architecture.md) · [Run a task](docs/reproduction.md#run-a-task) · [Installation](docs/reproduction.md) · [Evaluation panels](docs/evaluation.md)
+[Project page and episode replays](https://echo-nn.github.io/PRIORA/) · [Agent architecture](docs/architecture.md) · [Run a task](docs/reproduction.md#run-a-task) · [Installation](docs/reproduction.md) · [Evaluation panels](docs/evaluation.md)
 
 ## One decision in RoboDojo
 
