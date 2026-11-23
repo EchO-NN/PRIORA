@@ -16,18 +16,13 @@ const state = {
   heatSort: 'task',
   heatDesc: false,
   level: 'family',
-  batch: 'all',
   viewerRows: [],
   selected: null,
-  sheet: 0,
   request: 0,
   trace: null,
 };
 let data, methods, groups;
 const pct = (v) => (Number.isFinite(v) ? v.toFixed(2) : '—');
-const fmtTask = (s) => s.replaceAll('_', ' ').replace(/^./, (x) => x.toUpperCase());
-const takeMean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
-const selectedPanel = (e, p) => p === 'all' || e.panel === p;
 function button(label, handler, cls, pressed) {
   const b = make('button', cls, label);
   b.type = 'button';
@@ -40,19 +35,6 @@ function safeLink(label, url) {
   a.href = url;
   return a;
 }
-function resultKey(e) {
-  return e.task + '__' + e.variant;
-}
-function countRate(rows) {
-  const complete = rows.filter((e) => typeof e.success === 'boolean' && !e.displayOnly);
-  return {
-    n: complete.length,
-    k: complete.filter((e) => e.success).length,
-    rate: complete.length
-      ? (100 * complete.filter((e) => e.success).length) / complete.length
-      : null,
-  };
-}
 function order(list, key, desc, get) {
   return [...list].sort((a, b) => {
     const x = get(a, key),
@@ -60,42 +42,6 @@ function order(list, key, desc, get) {
     if (x == null || y == null) return x == null ? (y == null ? 0 : 1) : -1;
     return (typeof x === 'string' ? x.localeCompare(y) : x - y) * (desc ? -1 : 1);
   });
-}
-function prioraMetrics() {
-  const rows = data.episodes.filter((e) => selectedPanel(e, state.batch) && !e.displayOnly);
-  const family = {},
-    variant = {},
-    dims = {},
-    counts = {},
-    variantCounts = {};
-  for (const f of data.families) {
-    const matched = rows.filter((e) => e.task === f.id);
-    const r = countRate(matched);
-    family[f.id] = r.rate;
-    counts[f.id] = r;
-    for (const v of f.variants) {
-      const t = countRate(matched.filter((e) => e.variant === v));
-      variant[f.id + '__' + v] = t.rate;
-      variantCounts[f.id + '__' + v] = t;
-    }
-  }
-  for (const d of dimensions)
-    dims[d] = takeMean(
-      data.families
-        .filter((f) => f.dimension === d)
-        .map((f) => family[f.id])
-        .filter(Number.isFinite),
-    );
-  return {
-    id: 'priora',
-    name: 'PRIORA',
-    family,
-    variant,
-    dims,
-    avg: dimensions.every((d) => dims[d] != null) ? takeMean(Object.values(dims)) : null,
-    counts,
-    variantCounts,
-  };
 }
 function pager(el, page, n, change, size, unit) {
   el.replaceChildren();
@@ -112,19 +58,15 @@ function setGalleryPage(page) {
   renderGallery();
 }
 function renderGallery() {
-  const panel = $('panel').value,
-    search = $('search').value.trim().toLowerCase().replaceAll('_', ' '),
+  const search = $('search').value.trim().toLowerCase().replaceAll('_', ' '),
     v = $('variant').value;
   const filtered = groups
     .filter((g) => (!state.dimension || g.dimension === state.dimension) && (!v || v === g.variant))
-    .map((g) => ({ ...g, rows: g.rows.filter((e) => selectedPanel(e, panel)) }))
     .filter(
       (g) =>
         g.rows.length &&
         (!search ||
-          [g.name, g.id, ...g.rows.map((e) => e.id)].some((x) =>
-            x.toLowerCase().replaceAll('_', ' ').includes(search),
-          )),
+          [g.name, g.id].some((x) => x.toLowerCase().replaceAll('_', ' ').includes(search))),
     );
   const grid = $('gallery-grid');
   grid.replaceChildren();
@@ -137,7 +79,7 @@ function renderGallery() {
   const size = 12;
   state.page = Math.min(state.page, Math.max(0, Math.ceil(filtered.length / size) - 1));
   for (const g of filtered.slice(state.page * size, (state.page + 1) * size)) {
-    const b = button('', () => openGroup(g.id, panel), 'task');
+    const b = button('', () => openGroup(g.id), 'task');
     const poster = g.rows.find((e) => e.poster);
     if (poster) {
       const pic = make('img', 'photo');
@@ -149,11 +91,7 @@ function renderGallery() {
     const block = make('span', 'task-body');
     block.append(make('strong', 'task-name', g.name));
     const meta = make('span', 'task-details');
-    const clips = g.rows.filter((e) => e.video).length;
-    meta.append(
-      make('span', 'variant', g.variant),
-      make('span', '', clips + ' recording' + (clips === 1 ? '' : 's')),
-    );
+    meta.append(make('span', 'variant', g.variant), make('span', '', g.dimension));
     block.append(meta);
     b.append(block);
     grid.append(b);
@@ -181,7 +119,6 @@ function initGallery() {
     );
   $('search').oninput = () => setGalleryPage(0);
   $('variant').onchange = () => setGalleryPage(0);
-  $('panel').onchange = () => setGalleryPage(0);
 }
 function header(thead, cols, active, desc, change) {
   const row = make('tr');
@@ -197,8 +134,7 @@ function header(thead, cols, active, desc, change) {
   thead.append(row);
 }
 function renderStats() {
-  const ours = prioraMetrics();
-  methods = [ours, ...data.methods];
+  methods = data.methods;
   const t = $('summary');
   t.replaceChildren();
   const head = t.createTHead();
@@ -224,11 +160,8 @@ function renderStats() {
       row.append(make('td', v != null && Math.abs(v - best[k]) < 0.005 ? 'best' : '', pct(v)));
     }
   }
-  const selected = data.episodes.filter((e) => selectedPanel(e, state.batch) && !e.displayOnly);
-  $('eval-count').textContent =
-    countRate(selected).n + ' completed / ' + selected.length + ' scheduled PRIORA layouts';
   $('stats-note').textContent =
-    'PRIORA uses the final result per layout, including designated reruns and human adjudication. A dimension averages its task-family rates; the mean gives each of the five dimensions equal weight. Pending episodes are excluded. External methods retain their published evaluation panels.';
+    'PRIORA pools the final outcome for each evaluated layout, including designated reruns and adjudicated outcomes. Each dimension averages its task-family rates; the five-dimension mean weights dimensions equally. The gallery is a selection of examples.';
   renderMatrix();
 }
 const heatStops = [
@@ -284,7 +217,6 @@ function renderMatrix() {
                 groups.find((g) => g.task === r.id && g.variant === 'standard') ||
                 groups.find((g) => g.task === r.id)
               ).id,
-          state.batch,
         ),
       'row-link',
     );
@@ -303,15 +235,13 @@ function renderMatrix() {
         td.style.backgroundColor = 'rgb(' + c.join(',') + ')';
         td.style.color = c[1] < 145 ? 'white' : '#172744';
       }
-      const detail = (level === 'family' ? m.counts : m.variantCounts)?.[r.key];
       td.title =
         m.name +
         ' · ' +
         r.name +
         (r.variant ? ' · ' + r.variant : '') +
         ' · ' +
-        (v == null ? 'Not reported' : pct(v) + '%') +
-        (detail?.n ? ' (' + detail.k + '/' + detail.n + ')' : '');
+        (v == null ? 'Not reported' : pct(v) + '%');
       row.append(td);
     }
   }
@@ -327,12 +257,10 @@ function renderSources() {
   }
   entry(
     'PRIORA',
-    'Final outcome per unique layout from the original 252 and additional 210 panels. Snapshot ' +
-      data.date +
-      '.',
-    'https://github.com/EchO-NN/PRIORA/tree/main/priora/benchmarks',
+    'Final outcome per evaluated layout. Results as of ' + data.date + '.',
+    'https://github.com/EchO-NN/PRIORA',
   );
-  for (const m of data.methods) {
+  for (const m of data.methods.filter((m) => m.id !== 'priora')) {
     entry(m.name, m.protocol, m.url);
     for (const source of m.sources.filter((s) => s.url !== m.url)) {
       const dd = list.lastElementChild.querySelector('dd');
@@ -341,80 +269,36 @@ function renderSources() {
   }
   $('source-list').replaceChildren(list);
 }
-function displayRows(g, panel) {
-  const rows = g.rows.filter((e) => selectedPanel(e, panel));
-  // Alternate panels where available so the first six cover individual layouts from both batches.
-  const out = [];
-  for (const category of [
-    (e) => e.video && !e.displayOnly && e.success != null,
-    (e) => e.video && !e.displayOnly && e.success == null,
-    (e) => e.video && e.displayOnly,
-    (e) => !e.video,
-  ]) {
-    const bins = ['252', '210'].map((p) => rows.filter((e) => e.panel === p && category(e)));
-    for (let i = 0; i < Math.max(...bins.map((a) => a.length)); i++)
-      for (const a of bins) if (a[i]) out.push(a[i]);
-  }
-  return out;
-}
-function openGroup(key, panel) {
+function openGroup(key) {
   const g = groups.find((g) => g.id === key);
   if (!g) return;
-  state.viewerRows = displayRows(g, panel);
+  state.viewerRows = g.rows;
   if (!state.viewerRows.length) return;
-  state.sheet = 0;
   $('viewer-title').textContent = g.name + ' · ' + g.variant;
   $('viewer-dim').textContent = g.dimension;
   if (!$('viewer').open) $('viewer').showModal();
   chooseEpisode(state.viewerRows[0]);
 }
 function renderEpisodeList() {
-  const el = $('episode-list');
-  el.replaceChildren();
-  const rows = state.viewerRows;
-  const n = rows.length;
-  $('episode-total').textContent = n + ' attempt' + (n === 1 ? '' : 's');
-  for (const ep of rows.slice(state.sheet * 6, state.sheet * 6 + 6)) {
+  const list = $('episode-list');
+  list.replaceChildren();
+  for (const ep of state.viewerRows) {
     const b = button('', () => chooseEpisode(ep), 'episode', state.selected?.id === ep.id);
-    let img;
-    if (ep.poster) {
-      img = make('img');
-      img.loading = 'lazy';
-      img.src = ep.poster;
-      img.alt = '';
-    } else img = make('span', 'mini-placeholder');
-    const body = make('span');
-    body.append(
-      make('b', '', 'Layout ' + ep.layout + ' · group ' + ep.group),
-      make(
-        'small',
-        '',
-        ep.panel +
-          ' panel · ' +
-          (ep.displayOnly
-            ? ep.extraLabel || 'Earlier attempt'
-            : ep.success === true
-              ? 'Success'
-              : ep.success === false
-                ? 'Failure'
-                : ep.extraLabel || 'No terminal result') +
-          (ep.video ? '' : ' · No video'),
-      ),
-    );
-    b.append(img, body);
-    el.append(b);
+    const img = make('img');
+    img.loading = 'lazy';
+    img.alt = '';
+    img.src = ep.poster;
+    b.append(img, make('b', '', 'Example ' + ep.number));
+    list.append(b);
   }
-  pager(
-    $('episode-pager'),
-    state.sheet,
-    n,
-    (p) => {
-      state.sheet = p;
-      renderEpisodeList();
-    },
-    6,
-    'Page',
-  );
+}
+const cameraNames = { main: 'Main', left: 'Left wrist', right: 'Right wrist', all: 'Three views' };
+function selectCamera(camera) {
+  const stage = $('video-stage');
+  stage.dataset.camera = camera;
+  $('player').setAttribute('aria-label', 'Recorded robot simulation, ' + cameraNames[camera]);
+  for (const b of document.querySelectorAll('.camera-controls button'))
+    b.setAttribute('aria-pressed', String(b.dataset.camera === camera));
 }
 function seekRatio(f) {
   const p = $('player');
@@ -445,7 +329,7 @@ function updateTrace() {
   }
   $('current-step').textContent = 'Step ' + observed + ' / ' + t.steps;
   if (!observed) {
-    $('current-mode').textContent = 'Initial observation';
+    $('current-mode').textContent = t.excerpt ? 'Clip start' : 'Initial observation';
     $('subtask').textContent = t.subtasks[t.segments[0][3]] || 'Subtask not recorded';
     return;
   }
@@ -479,35 +363,22 @@ async function chooseEpisode(ep) {
   const key = ++state.request,
     p = $('player');
   state.selected = ep;
+  selectCamera('main');
   const u = $('unavailable');
   p.pause();
   p.removeAttribute('src');
   p.removeAttribute('poster');
   p.load();
-  if (ep.poster) p.poster = ep.poster;
   const available = !!ep.video;
   p.hidden = !available;
   u.hidden = available;
-  u.textContent = available ? '' : 'Recording unavailable for this layout.';
+  u.textContent = available ? '' : 'Recording unavailable for this example.';
   if (available) {
     p.src = ep.video;
     p.load();
   }
-  const m = $('episode-meta'),
-    status =
-      ep.success === true ? 'Success' : ep.success === false ? 'Failure' : 'No terminal result';
-  m.replaceChildren(
-    make('b', '', 'Layout ' + ep.layout + ' · group ' + ep.group),
-    make('span', '', 'Panel ' + ep.panel),
-    make(
-      'span',
-      'status ' + (ep.success === true ? 's-ok' : ep.success === false ? 's-fail' : ''),
-      status,
-    ),
-  );
-  if (ep.extraLabel)
-    m.append(make('span', '', ep.extraLabel + (ep.displayOnly ? ' · gallery only' : '')));
-  if (ep.mediaNote) m.append(make('span', '', ep.mediaNote));
+  const meta = $('episode-meta');
+  meta.replaceChildren(make('b', '', 'Example ' + ep.number));
   renderEpisodeList();
   drawTrace(null);
   if (!ep.trace) return;
@@ -515,7 +386,11 @@ async function chooseEpisode(ep) {
     const res = await fetch(ep.trace);
     if (!res.ok) throw Error(res.status);
     const t = await res.json();
-    if (state.request === key) drawTrace(t);
+    if (state.request === key) {
+      drawTrace(t);
+      if (t.excerpt || t.partial)
+        meta.append(make('span', '', t.partial ? 'Partial recording' : 'Rollout excerpt'));
+    }
   } catch {
     if (state.request === key) drawTrace(null);
   }
@@ -524,6 +399,8 @@ function initViewer() {
   const d = $('viewer'),
     p = $('player'),
     tl = $('timeline');
+  for (const b of document.querySelectorAll('.camera-controls button'))
+    b.onclick = () => selectCamera(b.dataset.camera);
   $('close-viewer').onclick = () => d.close();
   d.onclick = (e) => {
     if (e.target === d) {
@@ -582,7 +459,17 @@ async function main() {
       name: f.name,
       dimension: f.dimension,
       variant: v,
-      rows: data.episodes.filter((e) => e.task === f.id && e.variant === v),
+      rows: Array.from({ length: 6 }, (_, i) => {
+        const number = i + 1,
+          id = f.id + '--' + v + '--' + number;
+        return {
+          id,
+          number,
+          video: 'media/examples/' + id + '.mp4',
+          poster: 'media/posters/' + id + '.jpg',
+          trace: 'data/examples/' + id + '.json',
+        };
+      }),
     })),
   );
   initGallery();
@@ -590,10 +477,6 @@ async function main() {
   for (const d of ['', ...dimensions])
     $('heat-dimension').add(new Option(d || 'All dimensions', d));
   $('heat-dimension').onchange = renderMatrix;
-  $('stats-panel').onchange = () => {
-    state.batch = $('stats-panel').value;
-    renderStats();
-  };
   $('granularity').onclick = (e) => {
     const b = e.target.closest('button[data-level]');
     if (!b) return;
