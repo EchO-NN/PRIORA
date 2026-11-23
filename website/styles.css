@@ -163,9 +163,6 @@ h1 {
   line-height: 0.93;
   margin: 0 0 16px -0.055em;
 }
-h1 span {
-  color: var(--blue);
-}
 .subtitle {
   font-weight: 600;
   letter-spacing: -0.035em;
