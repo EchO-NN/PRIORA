@@ -48,6 +48,19 @@ function taskRate(group) {
     ? 'Success rate: ' + Number(group.rate.toFixed(2)) + '%'
     : 'Success rate unavailable';
 }
+function methodLabel(method) {
+  const label = document.createDocumentFragment();
+  label.append(method.name);
+  if (method.adaptations?.length) {
+    const mark = make('sup', 'method-star', '*');
+    mark.title = method.adaptations
+      .map((a) => (a === 'skills' ? 'Task-specific skills' : 'Recursive self-improvement (RSI)'))
+      .join(' and ');
+    mark.setAttribute('aria-label', mark.title);
+    label.append(mark);
+  }
+  return label;
+}
 function order(list, key, desc, get) {
   return [...list].sort((a, b) => {
     const x = get(a, key),
@@ -140,8 +153,8 @@ function header(thead, cols, active, desc, change) {
     const th = make('th');
     th.scope = 'col';
     if (active === key) th.setAttribute('aria-sort', desc ? 'descending' : 'ascending');
-    const b = button(label, () => change(key));
-    b.append(make('span', 'arrow', active === key ? (desc ? '▾' : '▴') : '↕'));
+    const b = button('', () => change(key));
+    b.append(label, make('span', 'arrow', active === key ? (desc ? '▾' : '▴') : '↕'));
     th.append(b);
     row.append(th);
   }
@@ -166,7 +179,8 @@ function renderStats() {
   for (const m of order(methods, state.statsSort, state.statsDesc, get)) {
     const row = body.insertRow();
     if (m.id === 'priora') row.className = 'ours';
-    const th = make('th', '', m.name);
+    const th = make('th');
+    th.append(methodLabel(m));
     th.scope = 'row';
     row.append(th);
     for (const [k] of cols.slice(1)) {
@@ -175,7 +189,7 @@ function renderStats() {
     }
   }
   $('stats-note').textContent =
-    'PRIORA pools the final outcome for each evaluated layout, including designated reruns and adjudicated outcomes. Each dimension averages its task-family rates; the five-dimension mean weights dimensions equally. The gallery is a selection of examples.';
+    'PRIORA pools the final outcome for each evaluated layout, including designated reruns and adjudicated outcomes. Each dimension averages its task-family rates. The five-dimension mean weights dimensions equally.';
   renderMatrix();
 }
 const heatStops = [
@@ -195,7 +209,7 @@ function renderMatrix() {
   const table = $('matrix');
   table.replaceChildren();
   const head = table.createTHead();
-  const cols = [['task', 'Task'], ...methods.map((m) => [m.id, m.name])];
+  const cols = [['task', 'Task'], ...methods.map((m) => [m.id, methodLabel(m)])];
   header(head, cols, state.heatSort, state.heatDesc, (k) => {
     state.heatDesc = k === state.heatSort ? !state.heatDesc : k !== 'task';
     state.heatSort = k;
@@ -262,10 +276,12 @@ function renderMatrix() {
 }
 function renderSources() {
   const list = make('dl');
-  function entry(name, desc, url) {
+  function entry(label, desc, url) {
     const row = make('div'),
       dt = make('dt');
-    dt.append(url ? safeLink(name, url) : document.createTextNode(name));
+    const title = url ? safeLink('', url) : dt;
+    title.append(label);
+    if (url) dt.append(title);
     row.append(dt, make('dd', '', desc));
     list.append(row);
   }
@@ -275,7 +291,7 @@ function renderSources() {
     'https://github.com/EchO-NN/PRIORA',
   );
   for (const m of data.methods.filter((m) => m.id !== 'priora')) {
-    entry(m.name, m.protocol, m.url);
+    entry(methodLabel(m), m.protocol, m.url);
     for (const source of m.sources.filter((s) => s.url !== m.url)) {
       const dd = list.lastElementChild.querySelector('dd');
       dd.append(' · ', safeLink(source.label, source.url));
@@ -356,24 +372,27 @@ function selectCamera(camera) {
   for (const b of document.querySelectorAll('.camera-controls button'))
     b.setAttribute('aria-pressed', String(b.dataset.camera === camera));
 }
-function seekRatio(f) {
+function timelineSeconds() {
+  return state.trace?.steps * state.trace?.controlDt || $('player').duration;
+}
+function seekTime(seconds) {
   const p = $('player');
-  if (!Number.isFinite(p.duration) || p.duration <= 0) return;
-  p.currentTime = Math.max(0, Math.min(p.duration - 0.001, f * p.duration));
+  if (!Number.isFinite(seconds)) return;
+  p.currentTime = Math.max(
+    0,
+    Number.isFinite(p.duration) ? Math.min(p.duration - 0.001, seconds) : seconds,
+  );
   updateTrace();
 }
 function updateTrace() {
   const p = $('player'),
     t = state.trace;
   if (!state.selected) return;
-  const ratio =
-    Number.isFinite(p.duration) && p.duration > 0
-      ? Math.max(0, Math.min(1, p.currentTime / p.duration))
-      : 0;
+  const duration = timelineSeconds();
+  const ratio = duration > 0 ? Math.max(0, Math.min(1, p.currentTime / duration)) : 0;
   const observed = t?.steps
     ? Math.max(0, Math.min(t.steps, Math.floor(p.currentTime / t.controlDt + 1e-6)))
     : 0;
-  const position = Math.max(0, observed - 1);
   const panel = $('timeline');
   panel.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
   $('cursor').style.left = ratio * 100 + '%';
@@ -389,15 +408,63 @@ function updateTrace() {
     $('subtask').textContent = t.subtasks[t.segments[0][3]] || 'Subtask not recorded';
     return;
   }
+  const position = Math.min(observed, t.steps - 1);
   const seg = t.segments.find((s) => s[0] <= position && position < s[1]);
   $('current-mode').textContent = modes[seg?.[2]] || modes.unknown;
   $('subtask').textContent =
     (seg?.[3] != null ? t.subtasks[seg[3]] : null) || 'Subtask not recorded';
 }
+function drawSubtaskMarkers(trace) {
+  const track = $('subtask-markers'),
+    detail = $('switch-detail');
+  track.replaceChildren();
+  detail.hidden = true;
+  const segments = trace?.segments ?? [];
+  const switches = [];
+  for (let i = 1; i < segments.length; i++) {
+    const prev = segments[i - 1],
+      next = segments[i];
+    const from = trace.subtasks[prev[3]],
+      to = trace.subtasks[next[3]];
+    if (prev[1] === next[0] && from && to && from !== to)
+      switches.push({ step: next[0], from, to });
+  }
+  track.hidden = $('switch-key').hidden = switches.length === 0;
+  for (const [i, change] of switches.entries()) {
+    const { step, from, to } = change;
+    const seconds = step * trace.controlDt;
+    const heading = 'Subtask switch at step ' + step + ' (' + seconds.toFixed(2) + ' s)';
+    const label = heading + '\nFrom: ' + from + '\nTo: ' + to;
+    const marker = button(
+      '',
+      () => {
+        seekTime(seconds);
+        detail.replaceChildren(
+          make('strong', '', heading),
+          make('span', '', 'From: ' + from),
+          make('span', '', 'To: ' + to),
+        );
+        detail.hidden = false;
+      },
+      'subtask-marker',
+    );
+    marker.title = label;
+    marker.setAttribute('aria-label', label);
+    marker.style.left = (100 * step) / trace.steps + '%';
+    // Keep closely spaced switches individually reachable on a narrow screen.
+    const gap = Math.min(
+      step - (switches[i - 1]?.step ?? 0),
+      (switches[i + 1]?.step ?? trace.steps) - step,
+    );
+    marker.style.width = 'min(26px, ' + (100 * gap) / trace.steps + '%)';
+    track.append(marker);
+  }
+}
 function drawTrace(t) {
   state.trace = t;
   const box = $('segments');
   box.replaceChildren();
+  drawSubtaskMarkers(t);
   if (t?.steps) {
     let at = 0;
     function add(w, mode) {
@@ -500,7 +567,7 @@ function initViewer() {
   });
   const move = (e) => {
     const r = tl.getBoundingClientRect();
-    seekRatio((e.clientX - r.left) / r.width);
+    seekTime(((e.clientX - r.left) / r.width) * timelineSeconds());
   };
   tl.onpointerdown = (e) => {
     tl.setPointerCapture(e.pointerId);
@@ -513,17 +580,17 @@ function initViewer() {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
     e.preventDefault();
     if (Number.isFinite(p.duration))
-      seekRatio(
+      seekTime(
         e.key === 'Home'
           ? 0
           : e.key === 'End'
-            ? 1
-            : (p.currentTime + (e.key === 'ArrowLeft' ? -1 : 1)) / p.duration,
+            ? p.duration
+            : p.currentTime + (e.key === 'ArrowLeft' ? -1 : 1),
       );
   };
 }
 async function main() {
-  const r = await fetch('data/catalog.json?v=outcomes-1');
+  const r = await fetch('data/catalog.json?v=methods-switches-1');
   if (!r.ok) throw Error(r.status);
   data = await r.json();
   const rates = data.methods.find((m) => m.id === 'priora').variant;

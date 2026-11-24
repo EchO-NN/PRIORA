@@ -10,9 +10,9 @@
     />
     <link rel="icon" href="data:," />
     <title>PRIORA · RoboDojo experiments</title>
-    <link rel="stylesheet" href="styles.css?v=outcomes-1" />
+    <link rel="stylesheet" href="styles.css?v=methods-switches-1" />
     <link rel="preload" href="assets/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <script defer src="app.js?v=outcomes-1"></script>
+    <script defer src="app.js?v=methods-switches-1"></script>
   </head>
   <body>
     <a class="skip" href="#gallery">Skip to task library</a>
@@ -113,12 +113,17 @@
         </div>
 
         <div class="table-wrap">
-          <table id="summary">
+          <table id="summary" aria-describedby="method-key stats-note">
             <caption class="sr-only">
               Five-dimension average and individual success rates
             </caption>
           </table>
         </div>
+        <p id="method-key" class="footnote">
+          * marks documented use of task-specific skills (written action guides or executable
+          routines) or recursive self-improvement (RSI). RoboDojo uses a separate annotation for
+          protocol deviations on its leaderboard.
+        </p>
         <p id="stats-note" class="footnote"></p>
       </section>
       <section id="heatmap" class="band">
@@ -151,8 +156,8 @@
             </table>
           </div>
           <p class="footnote">
-            A dash marks a rate unavailable at the selected granularity. Published family rates are
-            displayed at family level.
+            * marks task-specific skills or RSI. A dash marks a rate unavailable at the selected
+            granularity. Published family rates are displayed at family level.
           </p>
         </div>
       </section>
@@ -232,6 +237,7 @@
               <h3>Control timeline</h3>
               <span id="current-step"></span>
             </div>
+            <div id="subtask-markers" role="group" aria-label="Subtask switches" hidden></div>
             <div
               id="timeline"
               tabindex="0"
@@ -247,8 +253,10 @@
             <div class="legend">
               <span class="wall">WALL</span><span class="edit">GPT edit</span
               ><span class="eef">GPT takeover</span><span class="unknown">Unrecorded</span>
+              <span class="switch-key" id="switch-key" hidden>Subtask switch</span>
             </div>
             <div class="now"><strong id="current-mode"></strong><span id="subtask"></span></div>
+            <div id="switch-detail" hidden></div>
           </div>
         </div>
         <aside class="episode-side">
