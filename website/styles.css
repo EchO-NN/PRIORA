@@ -515,6 +515,11 @@ input,
 .best {
   font-weight: 800;
 }
+.method-star {
+  margin-left: 0.12em;
+  color: var(--deep);
+  font-weight: 750;
+}
 .footnote {
   margin-top: 12px;
   line-height: 1.5;
@@ -748,6 +753,56 @@ body:has(dialog[open]) {
   border-left: 2px solid #121722;
   box-shadow: 0 0 0 1px white;
   pointer-events: none;
+}
+#subtask-markers {
+  position: relative;
+  height: 19px;
+  margin-top: 5px;
+}
+#subtask-markers:not([hidden]) + #timeline {
+  margin-top: 0;
+}
+.subtask-marker {
+  position: absolute;
+  top: 0;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform: translateX(-50%);
+}
+.subtask-marker::after,
+.legend .switch-key::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: #273956;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.subtask-marker::after {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+.subtask-marker:hover::after,
+.subtask-marker:focus-visible::after {
+  background: var(--deep);
+}
+.legend .switch-key::before {
+  display: inline-block;
+  border-radius: 0;
+  vertical-align: middle;
+}
+#switch-detail:not([hidden]) {
+  display: grid;
+  gap: 3px;
+  margin-top: 10px;
+  padding-left: 10px;
+  border-left: 2px solid #788ba6;
+  line-height: 1.4;
+  font-size: 0.85rem;
 }
 .legend {
   gap: 12px;
