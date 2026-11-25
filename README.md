@@ -4,6 +4,21 @@ When a generalist model can issue robot actions itself, what does a policy train
 
 [Project page and episode replays](https://echo-nn.github.io/PRIORA/) · [Agent architecture](docs/architecture.md) · [Run a task](docs/reproduction.md#run-a-task) · [Installation](docs/reproduction.md) · [Evaluation panels](docs/evaluation.md)
 
+## RoboDojo results
+
+Final outcomes across the evaluated layouts, with equal weight for each capability in the five-dimension mean.
+
+| Capability | Success | Mean score (0–100) |
+| --- | ---: | ---: |
+| Generalization | 84.09% | 86.52 |
+| Precision | 60.23% | 65.00 |
+| Long-Horizon | 67.05% | 81.88 |
+| Memory | 95.45% | 95.53 |
+| Open | 59.09% | 62.05 |
+| **Five-dimension mean** | **73.18%** | **78.19** |
+
+[Compare task outcomes and watch complete episodes](https://echo-nn.github.io/PRIORA/#gallery)
+
 ## One decision in RoboDojo
 
 | Main camera | Left wrist | Right wrist |

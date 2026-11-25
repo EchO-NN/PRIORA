@@ -1,6 +1,6 @@
 # PRIORA project page
 
-The [project page](https://echo-nn.github.io/PRIORA/) compares methods on RoboDojo and presents six video examples for each task variant. Standard and random variants have separate galleries.
+The [project page](https://echo-nn.github.io/PRIORA/) compares methods on RoboDojo and presents up to six independent full episodes per task variant. Standard and random variants have separate galleries.
 
 The static site source lives here. The published `gh-pages` branch also contains the media. To preview it locally:
 
@@ -18,7 +18,7 @@ Replace the figure with ID `pipeline-figure` in `index.html` when the pipeline i
 
 A method’s `adaptations` field records documented use of task-specific skills or recursive self-improvement in the displayed configuration. Either flag displays an asterisk in the comparison and heatmap. RoboDojo publishes its protocol disclosures separately.
 
-Examples use public names of the form `task--variant--1`. The matching JSON trace contains the control period, subtask strings, and half-open segments `[start, end, mode, subtaskIndex]`. Some examples are non-overlapping phases of a longer rollout. Their timelines start at the first observation of the excerpt. The example badges reflect the final outcome of the source rollout. Task cards and the player show the success rate over all evaluated layouts for that variant.
+Examples use public names of the form `task--variant--1`. The matching JSON trace contains the control period, subtask strings, and half-open segments `[start, end, mode, subtaskIndex]`. Each example runs from its initial observation through its terminal frame. Each source episode appears once. The trace includes the exact video SHA-256 and frame count. The example badges reflect the final outcome of the source rollout. Task cards and the player show the success rate over all evaluated layouts for that variant.
 
 Each video stores three synchronized 640 × 360 views side by side at 25 frames per second, ordered main, left wrist, right wrist. Playback speed ranges from 0.25× to 4×. The camera controls, control timeline, and subtask display share the video clock at every speed.
 

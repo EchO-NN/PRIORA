@@ -1,1 +1,1 @@
-{"steps":55,"controlDt":0.04,"subtasks":["Pick up the golden trophy cup by 10 cm."],"segments":[[0,16,"wall",0],[16,32,"wall",0],[32,48,"wall",0],[48,55,"wall",0]]}
+{"steps":64,"controlDt":0.04,"frames":65,"videoSha256":"4783d286f5631f41d69e924501a1e4b18602e1bb44ee142540f2cfe2bb6b11fb","subtasks":["Pick up the shiny red bell pepper by 10 cm."],"segments":[[0,16,"wall",0],[16,32,"wall",0],[32,48,"wall",0],[48,64,"wall",0]]}
