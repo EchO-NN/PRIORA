@@ -22,4 +22,4 @@ Examples use public names of the form `task--variant--1`. The matching JSON trac
 
 Each video stores three synchronized 640 × 360 views side by side at 25 frames per second, ordered main, left wrist, right wrist. Playback speed ranges from 0.25× to 4×. The camera controls, control timeline, and subtask display share the video clock at every speed.
 
-Triangles mark the first control step of each new recorded subtask within the clip. Select a triangle to seek to that boundary and see the previous and next instructions. The vertical line tracks the current playback time.
+Triangles mark the first control step of each new recorded subtask within the episode. Select a triangle to seek to that boundary and see the previous and next instructions. The vertical line tracks the current playback time.
