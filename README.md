@@ -17,7 +17,7 @@ Final outcomes across the evaluated layouts, with equal weight for each capabili
 | Open | 59.09% | 62.05 |
 | **Five-dimension mean** | **73.18%** | **78.19** |
 
-[Compare task outcomes and watch complete episodes](https://echo-nn.github.io/PRIORA/#gallery)
+[Compare task outcomes and watch complete episodes](https://echo-nn.github.io/PRIORA/#gallery) · [Complete rollout data](https://github.com/EchO-NN/PRIORA/tree/rollouts)
 
 ## One decision in RoboDojo
 
