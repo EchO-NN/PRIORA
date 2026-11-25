@@ -590,7 +590,7 @@ function initViewer() {
   };
 }
 async function main() {
-  const r = await fetch('data/catalog.json?v=methods-switches-1');
+  const r = await fetch('data/catalog.json?v=full-rollouts-nov25');
   if (!r.ok) throw Error(r.status);
   data = await r.json();
   const rates = data.methods.find((m) => m.id === 'priora').variant;
@@ -602,16 +602,16 @@ async function main() {
       dimension: f.dimension,
       rate: rates[f.id + '__' + v],
       variant: v,
-      rows: Array.from({ length: 6 }, (_, i) => {
+      rows: data.exampleOutcomes[f.id + '__' + v].map((success, i) => {
         const number = i + 1,
           id = f.id + '--' + v + '--' + number;
         return {
           id,
           number,
-          success: data.exampleOutcomes[f.id + '__' + v][i],
-          video: 'media/examples/' + id + '.mp4?v=outcomes-1',
-          poster: 'media/posters/' + id + '.jpg?v=outcomes-1',
-          trace: 'data/examples/' + id + '.json?v=outcomes-1',
+          success,
+          video: 'media/examples/' + id + '.mp4?v=full-rollouts-nov25',
+          poster: 'media/posters/' + id + '.jpg?v=full-rollouts-nov25',
+          trace: 'data/examples/' + id + '.json?v=full-rollouts-nov25',
         };
       }),
     })),

@@ -1,1 +1,1 @@
-{"steps":64,"controlDt":0.04,"subtasks":["Pick up the shiny red bell pepper by 10 cm."],"segments":[[0,16,"wall",0],[16,32,"wall",0],[32,48,"wall",0],[48,64,"wall",0]]}
+{"steps":57,"controlDt":0.04,"frames":58,"videoSha256":"c44d6d6e311e2bef642f3f05389bc291b55ed40fc91520df7635a3deb01e70e3","subtasks":["Pick up the wrench tool by 10 cm."],"segments":[[0,16,"wall",0],[16,32,"wall",0],[32,48,"wall",0],[48,57,"wall",0]]}
