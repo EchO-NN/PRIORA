@@ -11,11 +11,11 @@ Final outcomes across the evaluated layouts, with equal weight for each capabili
 | Capability | Success | Mean score (0–100) |
 | --- | ---: | ---: |
 | Generalization | 84.09% | 86.52 |
-| Precision | 60.23% | 65.00 |
+| Precision | 60.23% | 65.17 |
 | Long-Horizon | 67.05% | 81.88 |
 | Memory | 95.45% | 95.53 |
 | Open | 59.09% | 62.05 |
-| **Five-dimension mean** | **73.18%** | **78.19** |
+| **Five-dimension mean** | **73.18%** | **78.23** |
 
 [Compare task outcomes and watch complete episodes](https://echo-nn.github.io/PRIORA/#gallery) · [Complete rollout data](https://github.com/EchO-NN/PRIORA/tree/rollouts)
 
